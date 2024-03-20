@@ -1,0 +1,19 @@
+% Define the port number to listen on
+port = 12345;  % Use the same port number that Python is sending to
+
+% Create a UDP object
+u = udp('LocalHost', port, 'LocalPort', port);
+
+% Open the UDP connection
+fopen(u);
+
+% Receive the UDP message (assuming it's a numpy array)
+data_bytes = fread(u, u.BytesAvailable);
+data = typecast(uint8(data_bytes), 'double');  % Convert bytes back to double array
+
+% Display or process the received data
+disp(data);
+
+% Close the UDP connection
+fclose(u);
+delete(u);
