@@ -1,19 +1,26 @@
-% Define the port number to listen on
-port = 12345;  % Use the same port number that Python is sending to
+% Define the IP address and port number to listen on
+remoteHost = '127.0.0.1'; % Example IP address of the sender (Python)
+remotePort = 12345; % Example port number used by the sender (Python)
 
-% Create a UDP object
-u = udp('LocalHost', port, 'LocalPort', port);
+% Create a UDP port object
+udpPort = udpport("LocalHost", remoteHost, "LocalPort", remotePort);
 
-% Open the UDP connection
-fopen(u);
+% Set properties (optional)
+udpPort.InputBufferSize = 1024; % Set input buffer size as needed
 
-% Receive the UDP message (assuming it's a numpy array)
-data_bytes = fread(u, u.BytesAvailable);
-data = typecast(uint8(data_bytes), 'double');  % Convert bytes back to double array
+% Open the UDP port
+open(udpPort);
 
-% Display or process the received data
-disp(data);
+% Receive UDP data
+try
+    while true
+        dataReceived = read(udpPort);
+        disp(dataReceived);
+    end
+catch ME
+    disp(ME.message);
+end
 
-% Close the UDP connection
-fclose(u);
-delete(u);
+% Close the UDP port
+close(udpPort);
+
